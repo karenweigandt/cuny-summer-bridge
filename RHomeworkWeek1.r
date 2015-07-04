@@ -35,6 +35,9 @@ head(abc3)
 a <- abc3[1]
 b <- abc3[2]
 c <- abc3[3]
+print(a)
+print(b)
+print(c)
 f <- 1
 
 bsq <- b * b
