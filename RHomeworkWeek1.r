@@ -35,6 +35,22 @@ head(abc3)
 a <- abc3[1]
 b <- abc3[2]
 c <- abc3[3]
+
+# case determinant negative
+a <- 1
+b <- 0
+c <- 1
+
+#case determinant 0
+a <- 1
+b <- 2
+c <- 1
+
+# Case determinant positive
+a <- 1
+b <- 3
+c <- -4
+
 print(a)
 print(b)
 print(c)
