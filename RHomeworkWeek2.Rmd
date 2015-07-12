@@ -1,0 +1,50 @@
+---
+title: "Week2HWinprogress"
+author: "KarenWeigandt"
+date: "July 9, 2015"
+output: html_document
+---
+
+Week 2 Assignment. In probability, "n choose r" means n! / ((n-r)! * r!).  R has built in functions for choose() and factorial().  Write your own variation of the choose() function that does not use either of these functions.  Create your code and some test code, and deliver your code, results and documentation in a single R Markdown file.
+
+Note: n and r must be positive integers, n must be greater than r
+
+Embedded R code:
+
+```{r}
+
+n <- 1
+r <- 1
+
+my_choose = function(n, r){
+  if (n < 1 | r < 1) {
+    n_choose_r = NA
+    print('Both n and r must be greater than 1')
+    } else 
+        if (n <= r) {       
+        n_choose_r = NA
+        print('n must be greater than r')
+        } else 
+            n_choose_r = prod((r + 1):n) / prod(1:(n - r))
+  return(n_choose_r)
+}
+
+# Test Data
+
+my_choose(6, 3) #test case appropriate numbers
+
+#test case r is zero expect Both n and r must be greater than 1
+my_choose(5, 0)
+
+#test case n is zero expect Both n and r must be greater than 1
+my_choose(0, -1)
+
+#test case r is greater than n expect n must be greater than r
+my_choose(2, 4)
+
+#test case r equal n expect n must be greater than r
+my_choose(3, 3)
+
+my_choose(4, 2) #test case appropriate numbers
+```
+
