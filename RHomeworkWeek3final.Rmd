@@ -1,0 +1,127 @@
+---
+title: "R Homework Week 3 - Mushroom Data"
+author: "KarenWeigandt"
+date: "July 16, 2015"
+output: html_document
+---
+
+Assignment Details
+
+Store a copy of the mushroom data in github repository.
+Reference this data in your R code
+
+Take the data, and create a dataframe with a subset of the
+columns in the dataset.  You should include the column that
+indicates edilble or poisonous and three or four other columns.
+You should also add meaningful column names and replace the
+abbreviations used in the data.
+
+
+Embedded R code:
+
+```{r}
+
+# install necessary packages
+install.packages("devtools", dependencies = TRUE, repos = "http://lib.stat.cmu.edu/R/CRAN/")
+install.packages("DataCombine", dependencies = TRUE, repos = "http://lib.stat.cmu.edu/R/CRAN/")
+
+# get RCurl on board so csv file can be retrieved
+library(RCurl)
+
+# get package DataCombine on board so FindReplace can be used
+library(DataCombine)
+
+# retrieve data file from github repository
+mushroom <- getURL("https://raw.githubusercontent.com/karenweigandt/cuny-summer-bridge/27636107110c8e883bcffd4ec4f12783bf465c9c/kawCOPYagaricuslepiota3.csv")
+
+# read the csv file into R
+fungus <- read.csv(text = mushroom, header = FALSE, stringsAsFactors = FALSE)
+
+# head(fungus) check the first 6 rows of data set fungus
+
+# decrease number of columns in dataset, as per assignment
+fewercol_fungus <- fungus[, 1:5]
+
+# head(fewercol_fungus) check the first 6 rows of data set fewercol_fungus
+
+# convert to dataframe
+df_fewercol_fungus <- data.frame(fewercol_fungus)
+
+# modify column names
+colnames(df_fewercol_fungus) <- c("eat", "cap_shape", "cap_surface", "cap_color", "bruises")
+
+# create data frame for replacement of eat values
+eat_orig <- c("p", "e")
+eat_new <- c("poisonous", "edible")
+df_eat_replace <- data.frame(eat_orig, eat_new)
+
+# replace eat values and save them in new dataframe
+df_new_fungus <- FindReplace(data = df_fewercol_fungus, Var = "eat", replaceData = df_eat_replace, from = "eat_orig", to = "eat_new", exact = FALSE)
+
+# create data frame for replacement of cap_shape values
+cap_shape_orig <- c("b", "c", "x", "f", "k", "s")
+cap_shape_new <- c("bell", "conical", "convex", "flat", "knobbed", "sunken")
+df_cap_shape_replace <- data.frame(cap_shape_orig, cap_shape_new)
+
+# replace cap_shape values and save them with previous changes in the new dataframe
+df_new_fungus <- FindReplace(data = df_new_fungus, Var = "cap_shape", replaceData = df_cap_shape_replace, from = "cap_shape_orig", to = "cap_shape_new", exact = FALSE)
+
+# create data frames for replacement of cap_surface values
+cap_surface_orig <- c("f", "g", "y", "s")
+cap_surface_int <- c("0", "1", "2", "3")
+cap_surface_new <- c("fibrous", "grooves", "scaly", "smooth")
+
+df_cap_surface_orig_to_int <- data.frame(cap_surface_orig, cap_surface_int)
+df_cap_surface_replace <- data.frame(cap_surface_int, cap_surface_new)
+
+
+#replace cap_surface with intermediate values and save them with previous changes in the new dataframe
+df_new_fungus <- FindReplace(data = df_new_fungus, Var = "cap_surface", replaceData = df_cap_surface_orig_to_int, from = "cap_surface_orig", to = "cap_surface_int", exact = FALSE)
+
+# replace cap_surface intermediate values and save them with previous changes in the new dataframe
+df_new_fungus <- FindReplace(data = df_new_fungus, Var = "cap_surface", replaceData = df_cap_surface_replace, from = "cap_surface_int", to = "cap_surface_new", exact = FALSE)
+
+# create data frames for replacement of cap_color values
+cap_color_orig <- c("n", "b", "c", "g", "r", "p", "u", "e", "w", "y")
+cap_color_int <- c("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
+cap_color_new <- c("brown", "buff", "cinnamon", "gray", "green", "pink", "purple", "red", "white", "yellow")
+
+df_cap_color_orig_to_int <- data.frame(cap_color_orig, cap_color_int)
+df_cap_color_replace <- data.frame(cap_color_int, cap_color_new)
+
+# replace cap_color with intermediate values and save them with previous changes in the new dataframe
+df_new_fungus <- FindReplace(data = df_new_fungus, Var = "cap_color", replaceData = df_cap_color_orig_to_int, from = "cap_color_orig", to = "cap_color_int", exact = FALSE)
+
+# replace cap_color intermediate values with new values and save them with previous changes in the new dataframe
+df_new_fungus <- FindReplace(data = df_new_fungus, Var = "cap_color", replaceData = df_cap_color_replace, from = "cap_color_int", to = "cap_color_new", exact = FALSE)
+
+# create data frame for replacement of bruise values
+bruise_orig <- c("t", "f")
+bruise_new <- c("yes", "no")
+df_bruise_replace <- data.frame(bruise_orig, bruise_new)
+
+# replace bruise values and save them with previous changes in the new dataframe
+df_new_fungus <- FindReplace(data = df_new_fungus, Var = "bruises", replaceData = df_bruise_replace, from = "bruise_orig", to = "bruise_new", exact = FALSE)
+
+# show the first 6 rows of the new dataframe
+head(df_new_fungus)
+
+# show the first 6 rows of the old dataframe for comparison
+head(df_fewercol_fungus)
+
+# show data frame by
+#printing 1000 rows at a time
+print(df_new_fungus[1:1000, ])
+print(df_new_fungus[1001:2000, ])
+print(df_new_fungus[2001:3000, ])
+print(df_new_fungus[3001:4000, ])
+print(df_new_fungus[4001:5000, ])
+print(df_new_fungus[5001:6000, ])
+print(df_new_fungus[6001:7000, ])
+print(df_new_fungus[7001:8000, ])
+print(df_new_fungus[8001:8124, ])
+
+```
+
+
+
