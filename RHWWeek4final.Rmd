@@ -1,0 +1,91 @@
+---
+title: "RHWWeek4"
+author: "KarenWeigandt"
+date: "July 22, 2015"
+output: html_document
+---
+
+R Homework Week 4 Assignment
+
+Exploratory Data Analysis in R.
+
+Choose an interesting dataset and use R graphics to describe the data.
+You may use base R graphics, or a graphics package of your choice.
+You should include at least one example of each of the following:
+histogram
+boxplot
+scatterplot
+
+Do the graphics provide insight into any relationships in the data?
+
+Install necessary packages:
+```{r}
+install.packages("devtools", dependencies = TRUE, repos = "http://lib.stat.cmu.edu/R/CRAN/")
+
+
+```
+
+Get RCurl on board so csv file can be retrieved
+
+```{r}
+library(RCurl)
+```
+
+
+Retrieve data file from github repository
+```{r}
+caschooldata <- getURL("https://raw.githubusercontent.com/karenweigandt/cuny-summer-bridge/master/Caschoolincolumns.csv")
+
+```
+
+
+Read data file
+```{r}
+ca_school_data_csv <- read.csv(text = caschooldata, header = TRUE, stringsAsFactors = FALSE)
+
+```
+
+
+Look at first six rows of data
+```{r}
+head(ca_school_data_csv)
+
+```
+
+
+Generate a histogram of number of teachers
+```{r}
+hist(ca_school_data_csv$teachers, col = "lightblue", breaks = 100, main = "Number of Teachers in California Schools")
+
+```
+
+Generate a boxplot of enrollment totals for selected four California counties
+```{r}
+four_counties_of_ca_school <- ca_school_data_csv [which(ca_school_data_csv$county == "Kings" |ca_school_data_csv$county == "Orange" |ca_school_data_csv$county == "Fresno" |ca_school_data_csv$county == "Yuba" ),]
+boxplot(enrltot~county, data = four_counties_of_ca_school, main = "Enrollment Totals in Four California Counties")
+
+```
+
+Generate a scatterplot of enrollment totals vs. number of teachers
+```{r}
+plot(ca_school_data_csv$enrltot, ca_school_data_csv$teachers, main = "Enrollment Total vs. Number of Teachers")
+
+```
+
+# Conclusions
+
+From the histogram, we see right skewed data, and we see that the vast majority of schools have smaller numbers of teachers.
+
+The boxplot shows four counties in California, for ease of readability.  A boxplot of all counties would be difficult to read visually.  Fom the boxplot we can see that Orange County Schools have the highest average enrollment of the four counties, with one very large school.  The vast majority of schools in Fresno are similar in enrollment size.  Kings and Yuba counties are similar in terms of average enrollment, and Yuba county has no outliers in terms of enrollment size.
+
+The scatterplot shows an essentially linear relationship between enrollment totals and the number of teachers.  This makes sense, since most schools are packed to their legal limit for student:teacher ratio.
+
+
+
+
+
+
+
+
+
+
