@@ -1,0 +1,79 @@
+---
+title: "DataScienceMathWeek4HW"
+author: "KarenWeigandt"
+date: "July 23, 2015"
+output: html_document
+---
+
+#Data Science Math Week 4 Homework
+
+1. Using matrix operations, describe the solutions for the following family of equations:
+x + 2y - 3z = 5
+2x + y - 3z = 13
+-x + y = -8
+
+This can be written as Ax = B in matrix form 
+
+See Word document for Matrix form
+    
+The determinant of A =
+  1 x ((1 x 0) - (-3 x 1)) - 2 x ((2 x 0) - (-3)(-1)) + (-3)((2 x 1) -  1(-1))
+  = 1 x (0 + 3) - 2 x (0 - 3) + (-3) x (2 + 1)
+  = 1 x 3 - (2)(-3) + (-3)(3)
+  = 3 + 6 - 9
+  = 0
+  
+If the determinant of a matrix is zero, then the system of equations is linearly dependent, and there is no unique solution. 
+
+
+
+2. Provide a solution for #1, using R functions of your choice.
+
+```{r}
+# Build matrix M
+
+vec1 <- c(1, 2, -1, 2, 1, 1, -3, -3, 0)
+
+M = matrix(vec1, nrow = 3)
+
+# Calulate determinant
+
+det(M)
+
+```
+3. Solve for AB by hand:
+
+See Word document 
+
+
+
+4. Solve AB from #3 using R functions of your choice.
+
+```{r}
+# Build matrix A
+
+vec2 = c(4, -3, 0, -3, 5, 1)
+
+A = matrix(vec2, nrow = 3)
+
+A
+
+# Build matrix B
+
+vec3 = c(1, 3, 4, -2)
+
+B = matrix(vec3, nrow = 2)
+
+B
+
+# Multiply
+
+D <- A %*% B
+
+print("Matrix D = Matrix A x Matrix B")
+
+D
+
+```
+
+
