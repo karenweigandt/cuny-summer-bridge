@@ -1,0 +1,250 @@
+---
+title: "FinalProjectR"
+author: "KarenWeigandt"
+date: "July 26, 2015"
+output: html_document
+---
+
+
+Install necessary packages:
+```{r}
+install.packages("devtools", dependencies = TRUE, repos = "http://lib.stat.cmu.edu/R/CRAN/")
+install.packages("ggplot2", dependencies = TRUE, repos = "http://lib.stat.cmu.edu/R/CRAN/")
+
+```
+
+Get RCurl on board so csv files can be retrieved, get gglot2 on board
+
+```{r}
+library(RCurl)
+library(ggplot2)
+
+```
+
+
+Retrieve data file from github repository
+```{r}
+ten_eleven_comp <- getURL("https://raw.githubusercontent.com/karenweigandt/cuny-summer-bridge/master/Libraries_Annual_Statistics_Comparison_2010-2011.csv")
+eleven_coll_stats <- getURL("https://raw.githubusercontent.com/karenweigandt/cuny-summer-bridge/master/Libraries_Collection_Statistics_2011_2.csv")
+five_twelve_mat_inv <- getURL("https://raw.githubusercontent.com/karenweigandt/cuny-summer-bridge/master/Libraries_Material_Inventory_2005_-_2012.csv")
+
+```
+
+Read data file
+```{r}
+ten_eleven_comp_csv <- read.csv(text = ten_eleven_comp, header = TRUE, stringsAsFactors = FALSE)
+eleven_coll_stats_csv <- read.csv(text = eleven_coll_stats, header = TRUE, stringsAsFactors = FALSE)
+five_twelve_mat_inv_csv <- read.csv(text = five_twelve_mat_inv, header = TRUE, stringsAsFactors = FALSE)
+
+```
+
+
+Look at first six rows of data
+```{r}
+head(ten_eleven_comp_csv)
+head(eleven_coll_stats_csv)
+head(five_twelve_mat_inv_csv)
+
+```
+
+Subset material inventory data to only include 2011
+```{r}
+eleven_mat_inv <- subset(five_twelve_mat_inv_csv, Year == 2011)
+#head(eleven_mat_inv)
+
+```
+
+Subset 2011 material inventory to books on the island of Oahu
+```{r}
+oahu_eleven_book_inv <- subset(eleven_mat_inv, ISLAND == 'Oahu' & INVENTORY.DESCRIPTOR == 'Library Materials Books')
+
+#oahu_eleven_book_inv
+```
+
+
+Histogram for Books in Hawaii libraries
+```{r}
+options(sscipen = 3)
+qplot(eleven_coll_stats_csv$BOOK, 
+      geom = "histogram", 
+      binwidth = 25000,
+      col = I("red"),
+      fill = I("blue"),
+      main = "Books in Hawaii Libraries",
+      xlab = "Number of Books",
+      ylab = "Number of Libraries"
+      )
+
+```
+
+Basic Statistics for number of books in Hawaii libraries
+```{r}
+sprintf("Average number of books in Hawaii libraries is %s", round(mean(eleven_coll_stats_csv$BOOK)))
+sprintf("Average standard deviation for the number of books in Hawaii libraries is %s", round(sd(eleven_coll_stats_csv$BOOK)))
+sprintf("Median number of books in Hawaii libraries is %s", round(median(eleven_coll_stats_csv$BOOK)))
+
+```
+
+
+Quantile for the number of books in Hawaii libraries
+```{r}
+qb <- quantile(eleven_coll_stats_csv$BOOK)
+qb
+
+```
+
+
+Boxplot for number of books in Hawaii libraries
+```{r}
+options(scipen = 3)
+boxplot(eleven_coll_stats_csv$BOOK, main = "Boxplot: Books in Hawaii Libraries")
+
+```
+
+
+```{r}
+eleven_patron_circ <- ten_eleven_comp_csv[c(-2, -4, -6, -7, -9, -10, -12,-13, -14, -15)]
+
+#head(eleven_patron_circ)
+
+eleven_oahu_patron_circ <- subset(eleven_patron_circ, Island == 'Oahu')
+ 
+#eleven_oahu_patron_circ
+
+eleven_kauai_patron_circ <- subset(eleven_patron_circ, Island == 'Kauai')
+
+#head(eleven_kauai_patron_circ)
+```
+
+Plot holdings vs. books
+
+```{r}
+qplot(TOTAL, BOOK,
+      data = eleven_coll_stats_csv, 
+      geom = "point", 
+      main = "Year 2011: Holdings vs. Number of Books for All Hawaii Libraries",
+      xlab = "Number of Holdings",
+      ylab = "Number of Books"
+      )
+
+```
+
+
+
+
+Display a scatter plot of Holdings vs. Circulation for Hawaii libraries or 2011
+
+```{r}
+qplot(Holdings.FY.2011, Circulation.Activity.FY.2011,
+      data = eleven_patron_circ, 
+      geom = "point", 
+      main = "Year 2011: Holdings vs. Circulation in Hawaii Libraries",
+      xlab = "Number of Holdings",
+      ylab = "Circulation Volume"
+      )
+
+```
+
+
+
+Display a scatter plot of Holdings vs. Circulation for Oahu libraries or 2011
+
+```{r}
+qplot(Holdings.FY.2011, Circulation.Activity.FY.2011,
+      data = eleven_oahu_patron_circ, 
+      geom = "point", 
+      main = "Year 2011: Holdings vs. Circulation in Oahu Libraries",
+      xlab = "Number of Holdings",
+      ylab = "Circulation Volume"
+      )
+
+
+```
+
+
+Display a scatterplot of Borrowers vs. Circulation for Oahu libraries or 2011
+
+```{r}
+options(scipen = 3)
+qplot(Registered.Borrowers.FY.2011, Circulation.Activity.FY.2011,
+      data = eleven_oahu_patron_circ, 
+      geom = "point", 
+      main = "Year 2011: Borrowers vs. Circulation in Oahu Libraries",
+      xlab = "Number of Borrowers",
+      ylab = "Circulation Volume"
+      )
+
+```
+
+Display a scatterplot of Borrowers vs. Holdings for Oahu libraries or 2011
+
+```{r}
+options(scipen = 3)
+qplot(Registered.Borrowers.FY.2011, Holdings.FY.2011,
+      data = eleven_oahu_patron_circ, 
+      geom = "point", 
+      main = "Year 2011: Borrowers vs. Holdings in Oahu Libraries",
+      xlab = "Number of Borrowers",
+      ylab = "Number of Holdings"
+      )
+
+```
+
+
+
+Display a scatter plot of Holdings vs. Circulation for Kauai libraries or 2011
+
+```{r}
+qplot(Holdings.FY.2011, Circulation.Activity.FY.2011,
+      data = eleven_kauai_patron_circ, 
+      geom = "point", 
+      main = "Year 2011: Holdings vs. Circulation in Kauai Libraries",
+      xlab = "Number of Holdings",
+      ylab = "Circulation Volume"
+      )
+
+
+```
+
+
+Display a scatterplot of Borrowers vs. Circulation for Kauai libraries or 2011
+
+```{r}
+options(scipen = 3)
+qplot(Registered.Borrowers.FY.2011, Circulation.Activity.FY.2011,
+      data = eleven_kauai_patron_circ, 
+      geom = "point", 
+      main = "Year 2011: Borrowers vs. Circulation in Kauai Libraries",
+      xlab = "Number of Borrowers",
+      ylab = "Circulation Volume"
+      )
+
+```
+
+
+Display a scatterplot of Borrowers vs. Holdings for Kauai libraries or 2011
+
+```{r}
+options(scipen = 3)
+qplot(Registered.Borrowers.FY.2011, Holdings.FY.2011,
+      data = eleven_kauai_patron_circ, 
+      geom = "point", 
+      main = "Year 2011: Borrowers vs. Holdings in Kauai Libraries",
+      xlab = "Number of Borrowers",
+      ylab = "Number of Holdings"
+      )
+
+```
+
+
+COnclusion:
+
+The information and visualizations presented herein allow us to easily ascertain some information about the libraries inn Hawaii.  First, the histogram shows that the majority of Hawaiian libraries contain less than 100,000 books.  There is one library with an unusually large amount of holdings, the Big Kahuna of Hawaiian libraries.  The boxblot shows 3 datapoints (libraries) that could be considered outliers.  Outlier removal is beyond the scope of this analysis.
+
+The first scatterplot shows the relationship of books to overall number of holdings for the libraries.  It appears to be a linear (proportional) relationship, which would allow us to infer that relationships between other library data and holdings would also hold true for the relationship between the number of nooks and the other data.
+
+For instance the next scatterplots show the relationships between holdings and circulation, in all of Hawaii and then the island of Oahu.  These appear similar,  while a scatterplot of the same data for the island of Kauai, exhibits a somewhat different profile.  This may be due to the fact that there are fewer libraries (data points) on Kauai.
+
+We have also plotted number of borrowers vs. circulation, and number of borrowers vs. holdings for both Oahu and Kauai.  For Kauai the pattern for circulation is similar whether plotted against number of borrowers or holdings.  But we can see from the borrowers vs holdings plot that this relationship is not directly proportional.  As for the island of Oahu, this is where our large outlier library resides.  There also appears to be another library, with a high proportion of holdings to borrowers. 
+
+It seems that in general the libraries with larger holdings (more books) have more borrowers and higher circulation, but this is not a hard and fast rule. This may be because the larger libraries are in more heavily populated areas, and have a larger tax base to provide funding, but the reasons can not be inferred from the data presented here.  For that, you need more data.
